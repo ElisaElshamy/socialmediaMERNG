@@ -12,8 +12,19 @@ module.exports = {
       _,
       { registerInput: { username, email, password, confirmPassword } }
     ) {
-      // TODO: Validate user data
-      // TODO: Make sure user doesnt already exist
+      // Validate user data
+      const { valid, errors } = validateRegisterInput(
+        username,
+        email,
+        password,
+        confirmPassword
+      )
+
+      if (!valid) {
+        throw new UserInputError('Errors', { errors })
+      }
+
+      // Make sure user doesnt already exist
       const user = await User.findOne({ username })
       if (user) {
         throw new UserInputError('Username is taken', {
